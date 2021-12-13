@@ -28,4 +28,18 @@ class Project_Post(models.Model):
         project = Project_Post.objects.filter(id=id)
         
         return project
+
+class Reviews(models.Model):
+    review = HTMLField()
+    posted_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    posted_on = models.DateTimeField(auto_now_add=True)
+    project_id = models.ForeignKey(Project_Post,on_delete=models.CASCADE)
+    
+    
+    
+    @classmethod
+    def get_review_by_project_id(cls,id):
+        projects = cls.objects.filter(project_id = id)
+        
+        return projects
         
