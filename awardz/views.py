@@ -16,3 +16,7 @@ from django.http.response import JsonResponse
 def home(request):
     projects = Project_Post.get_all_projects()
     return render(request,"home.html",{"projects":projects})
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
