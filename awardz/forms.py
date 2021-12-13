@@ -26,3 +26,11 @@ class Post_projectform(forms.ModelForm):
             'posted_by',
             'updated_on',
         ]
+
+class UpdateProfile(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = [
+            'updated_on',
+            'user',
+        ]
