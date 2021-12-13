@@ -38,3 +38,31 @@ def post_project_view(request):
     else:
         form = Post_projectform()
     return render(request,'new_post.html',{"form":form})
+
+@login_required
+def post_review_view(request,id):
+    
+    form = ReveiwForm()
+    reviews = Reviews.get_review_by_project_id(id)
+    project = Project_Post.get_project_by_id(id)
+    rates = Rates.get_rates_by_project_id(id)
+    desrate = []
+    usarate=[]
+    conrate=[]
+    if rates:
+        for rate in rates:
+            desrate.append(rate.design)
+            usarate.append(rate.usability)
+            conrate.append(rate.content)
+        total = len(desrate)*9
+        design =round(sum(desrate)/total *100,2)
+        usability = round(sum(usarate)/total *100,2)
+        content = round(sum(conrate),2)
+        return render(request,'single_project.html',{"form":form,"reviews":reviews,"project":project,"project_id":id,"design":design,"usability":usability,"content":content})
+    else:
+        usability=0
+        design = 0
+        content = 0
+        return render(request,'single_project.html',{"form":form,"reviews":reviews,"project":project,"project_id":id,"design":design,"usability":usability,"content":content})
+
+        
