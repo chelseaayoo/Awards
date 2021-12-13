@@ -20,3 +20,21 @@ def home(request):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+@login_required
+def post_project_view(request):
+    if request.method =='POST':
+        form = Post_projectform(request.POST,request.FILES)
+        
+        if form.is_valid():
+            new_project = form.save(commit=False)
+            new_project.posted_by = request.user
+            new_project.save()
+            return redirect('home')
+        else:
+            messages.info(request,'all fields are required')
+            return redirect('post-project')
+    
+    else:
+        form = Post_projectform()
+    return render(request,'new_post.html',{"form":form})
