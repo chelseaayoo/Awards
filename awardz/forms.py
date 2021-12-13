@@ -18,3 +18,11 @@ class ReveiwForm(forms.ModelForm):
             'posted_on',
             'project_id',
         ]
+
+class Post_projectform(forms.ModelForm):
+    class Meta:
+        model = Project_Post
+        exclude=[
+            'posted_by',
+            'updated_on',
+        ]
