@@ -100,4 +100,19 @@ def post_rate_view(request,id):
         messages.info(request,'all fields are required')
         return redirect('post-review',id)
 
+@login_required
+def update_profile_view(request):
+    if request.method =='POST':
+        form = UpdateProfile(request.POST,request.FILES,instance=request.user.profile)
+        userform = UserUpdateform(request.POST,instance=request.user)
+        
+        if form.is_valid() and userform.is_valid():
+            form.save()
+            userform.save()
+            return redirect('profile')
+    else:
+        form = UpdateProfile(instance=request.user.profile)
+        userform = UserUpdateform(instance=request.user)
+    return render(request,"update_profile.html",{"form":form,"userform":userform})
+
         
