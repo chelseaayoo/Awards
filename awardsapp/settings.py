@@ -18,6 +18,9 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import django_heroku
+import os
+from pathlib import Path
+
 
 MODE=config("MODE", default="dev")
 SECRET_KEY = config('SECRET_KEY')
@@ -58,8 +61,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'bootstrap4',
     'cloudinary',
-    'star_ratings',
     'crispy_forms',
+    'star_ratings'
 ]
 
 

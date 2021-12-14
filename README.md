@@ -79,7 +79,7 @@ python3.8
 ## Known Bugs
  Currently there are no known bugs but if you find a bug, kindly feel free to comment an issue here and inlcude their corresponding results.
 
-##Contact Information
+## Contact Information:
 Feel free to contact me incase of any issues or questions, ideas and concern towards the same.
 
 E-Mail: chelsea.ayoo@student.moringaschool.com
