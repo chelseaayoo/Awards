@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from awardz.views import  logout_view
-# from rest_framework import routers, serializers
+from rest_framework.authtoken.views import obtain_auth_token
 
-
+app_name='awardz'
+app_name='users'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('awardz.urls')),
-    path('accounts/', include('registration.backends.simple.urls')),
-    path('logout/',logout_view,name="logout"),
+    path('',include('users.urls')),
+    path('api-token-auth/', obtain_auth_token),
 ]
