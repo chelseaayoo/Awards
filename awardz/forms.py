@@ -1,45 +1,16 @@
-from django.contrib.auth.models import User
 from django import forms
-from .models import Project_Post,Reviews,Profile
+
+from .models import Projects, Review, RATE_CHOICES
 
 
-
-
-class SignUpForm(User):
+class PostProjectsForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ('username', 'password1', 'password2', )
+        model = Projects
+        fields = ['image','title','description','link']
 
-class ReveiwForm(forms.ModelForm):
-    class Meta:
-        model = Reviews
-        exclude=[
-            'posted_by',
-            'posted_on',
-            'project_id',
-        ]
+class RateForm(forms.ModelForm):
+    rate = forms.ChoiceField(choices=RATE_CHOICES, widget=forms.Select(), required=True)
 
-class Post_projectform(forms.ModelForm):
     class Meta:
-        model = Project_Post
-        exclude=[
-            'posted_by',
-            'updated_on',
-        ]
-
-class UpdateProfile(forms.ModelForm):
-    class Meta:
-        model = Profile
-        exclude = [
-            'updated_on',
-            'user',
-        ]
-
-class UserUpdateform(forms.ModelForm):
-    email = forms.EmailField()
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'email',
-        ]   
+         model = Review
+         fields = ('rate',) 
