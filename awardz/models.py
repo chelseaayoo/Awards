@@ -1,59 +1,63 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.fields import TextField
-from tinymce.models import HTMLField
+from django.utils import timezone
+from cloudinary.models import CloudinaryField
+from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import Rating
+from django.dispatch import receiver
+
+# Create your models here.
+
+class Rating(models.Model):
+    source = models.CharField(max_length=50)
+    rating = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.source
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete =models.CASCADE)
-    profile_pic = models.ImageField(upload_to="profile/",default = "default.jpg")
-    bio = HTMLField()
-    updated_on = models.DateTimeField(auto_now_add=True)
+class Projects(models.Model):
+    image = CloudinaryField('image')
+    title = models.CharField(max_length=120)
+    description = models.TextField() 
+    link = models.CharField(max_length=500)
+    ratings = GenericRelation(Rating, related_query_name='projects')
+    date_posted = models.DateTimeField(default=timezone.now)
 
-class Project_Post(models.Model):
-    posted_by = models.ForeignKey(User,on_delete=models.CASCADE)
-    img_project = models.ImageField(upload_to="project/")
-    project_url = models.URLField()
-    description = TextField()
-    posted_on = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100,blank=True)
-    
-    
-    def get_all_projects():
-        projects = Project_Post.objects.all()
-        return projects
-    
-    @classmethod
-    def get_project_by_id(cls,id):
-        project = Project_Post.objects.filter(id=id)
-        
-        return project
 
-class Reviews(models.Model):
-    review = HTMLField()
-    posted_by = models.ForeignKey(User,on_delete=models.CASCADE)
-    posted_on = models.DateTimeField(auto_now_add=True)
-    project_id = models.ForeignKey(Project_Post,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.title
     
-    
-    
-    @classmethod
-    def get_review_by_project_id(cls,id):
-        projects = cls.objects.filter(project_id = id)
-        
-        return projects
+    # delete project option
+    # def delete(self):
+    #     self.delete()
 
-class Rates(models.Model):
-    design = models.IntegerField(default = 1)
-    rate_by = models.ForeignKey(User,on_delete=models.CASCADE)
-    rate_on = models.DateTimeField(auto_now_add=True)
-    project_id = models.ForeignKey(Project_Post,on_delete=models.CASCADE)
-    content = models.IntegerField(default = 1)
-    usability = models.IntegerField(default = 1)
-    
-    @classmethod
-    def get_rates_by_project_id(cls,id):
-        projects_rates = cls.objects.filter(project_id = id)
-        
-        return projects_rates
-        
+    class Meta:
+        ordering = ['-date_posted']
+
+
+
+
+class ProjectsApi(models.Model):
+    title = models.CharField(max_length=40)
+    description = models.TextField()
+
+
+RATE_CHOICES = [
+	(1, '1 - Trash'),
+	(2, '2 - Horrible'),
+	(3, '3 - Terrible'),
+	(4, '4 - Bad'),
+	(5, '5 - OK'),
+	(6, '6 - Nice'),
+	(7, '7 - Good'),
+	(8, '8 - Very Good'),
+	(9, '9 - Perfect'),
+	(10,'10 - Excellent'), 
+]
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects, on_delete = models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    rate = models.PositiveSmallIntegerField(choices=RATE_CHOICES)
