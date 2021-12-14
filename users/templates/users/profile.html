@@ -1,0 +1,34 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block content %}
+{{block.super}}
+
+<style>
+    body{
+        background-color: bisque;
+    }
+</style>
+
+
+<div class="container"><br><br>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <img class="rounded-circle account-img" src="https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8Y2FydG9vbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" style="width:100px; height:100px;">
+        <div class="media-body">
+            <h2 class="account-heading">{{ user.username }}</h2>
+            <p class="text-secondary">{{ user.email }}</p>
+            <p class="text-secondary">{{ user.profile.bio }}</p>
+        </div>
+        <div class="border-top pt-3">
+        <small class="text-black">
+            <a href="{% url 'update' %}">Update Profile Details</a>
+        </small>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
