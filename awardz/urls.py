@@ -1,22 +1,15 @@
-from django.urls import path
+from django.urls import path,include,re_path
+from django.conf.urls import url
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
+# from . import projects
 
-urlpatterns=[
-    path('',views.home,name="home"),
-    path('new/project/',views.post_project_view,name="post-project"),
-    path('review/project/<int:id>',views.post_review_view, name='post-review'),
-    path('review/project/post/<int:id>',views.review_post,name="review_submit"),
-    path('review/project/rate/post/<int:id>',views.post_rate_view, name='post-rate'),
-    path('profile/user/update',views.update_profile_view,name='update-profile'),
-    path('profile/user',views.profile,name='profile'),
-    path('project/search',views.search_view,name="search"),
-    path('nav/',views.nav,name='nav'),
-    # path('api/profile/',views.ProfileList.as_view()),
-    # path('api/project/',views.ProjectList),
-    
+urlpatterns = [
+    re_path(r'^ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('',views.index,name='home-view'),
+    path('details/<int:id>/',views.project_details,name='details'),
+    path('post/',views.post_project,name='post_project'),
+    path('api/projects/', views.ProjectsList.as_view()),
+    path('api/project/project-id/<int:pk>/',views.ProjectDescription.as_view()),
+    path('rate/<int:pk>/',views.rate_project,name='rate'),
+    # re_path(r'^delete/(?P<project_id>\d+)$',projects.delete,name='delete'),
 ]
-
-if settings.DEBUG:
-    urlpatterns+= static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
