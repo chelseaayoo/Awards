@@ -10,7 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+from pathlib import Path
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'awardz',
-    'bootstrap5'
+    'users',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'bootstrap4',
+    'cloudinary',
+    'star_ratings',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +96,16 @@ DATABASES = {
     }
 }
 
+STAR_RATINGS_RANGE=10
+
+
+# authentication configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -122,6 +144,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+
+
+
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# setting configuration parameters globally
+cloudinary.config( 
+  cloud_name = "anipherchelsea", 
+  api_key = "864223959977843", 
+  api_secret = "2KxfzrDY68IxWoWL9v78Sn9lZzk",
+  
+)
+
+LOGIN_URL = '/'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
+
+
