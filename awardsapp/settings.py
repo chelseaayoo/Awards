@@ -10,13 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+from decouple import config,Csv
+import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-import dj_database_url
 import django_heroku
+
+MODE=config("MODE", default="dev")
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', True)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,12 +33,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@-oo0^=@c-%e^yw-dxc5djw+68*da_h$gna%r25&4a+2p_1w-$'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+
 
 
 # Application definition
@@ -53,7 +62,9 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 
+
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,13 +99,16 @@ WSGI_APPLICATION = 'awardsapp.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+   'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'awards',
-        'USER': 'anipherchelsea',
-    'PASSWORD':'Onyango09',
+        'NAME': config('DB_NAME'),
+        'USER' :   config('DB_USER'),
+        'PASSWORD' :  config('DB_PASSWORD'),
     }
 }
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
 
 STAR_RATINGS_RANGE=10
 
@@ -143,15 +157,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 
 
@@ -168,6 +181,12 @@ cloudinary.config(
   api_secret = "2KxfzrDY68IxWoWL9v78Sn9lZzk",
   
 )
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'anipherchelsea',
+    'API_KEY': '864223959977843',
+    'API_SECRET': '2KxfzrDY68IxWoWL9v78Sn9lZzk'
+}
+
 
 LOGIN_URL = '/'
 
